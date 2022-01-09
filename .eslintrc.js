@@ -15,5 +15,6 @@ module.exports = {
   rules: {
     quotes: ['error', 'single', { avoidEscape: true }],
     'comma-dangle': ['error', 'always-multiline'],
+    'react/prop-types': 'off',
   },
 };
