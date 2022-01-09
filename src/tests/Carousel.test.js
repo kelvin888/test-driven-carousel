@@ -2,6 +2,7 @@ import React from 'react';
 import { shallow } from 'enzyme';
 import Carousel from '../Carousel';
 import CarouselButton from '../CarouselButton';
+import CarouselSlide from '../CarouselSlide';
 
 describe('Carousel', () => {
   let wrapper;
@@ -54,7 +55,8 @@ describe('Carousel', () => {
     ).toBe('Next');
   });
 
-  describe('with a middle slide selected', () => { 
+  // START_HIGHLIGHT
+  describe('with a middle slide selected', () => { //<callout id="co.state-describe-block" />
     beforeEach(() => {
       wrapper.setState({ slideIndex: 1 });
     });
@@ -69,5 +71,31 @@ describe('Carousel', () => {
       wrapper.find('[data-action="next"]').simulate('click');
       expect(wrapper.state('slideIndex')).toBe(2);
     });
+  });
+
+  describe('with the first slide selected', () => {
+    it('wraps `slideIndex` to the max value when Prev is clicked', () => {
+      wrapper.setState({ slideIndex: 0 });
+      wrapper.find('[data-action="prev"]').simulate('click');
+      expect(wrapper.state('slideIndex')).toBe(slides.length - 1);
+    });
+  });
+
+  describe('with the last slide selected', () => {
+    it('wraps `slideIndex` to the min value when Next is clicked', () => {
+      wrapper.setState({ slideIndex: slides.length - 1 });
+      wrapper.find('[data-action="next"]').simulate('click');
+      expect(wrapper.state('slideIndex')).toBe(0);
+    });
+  });
+  // END_HIGHLIGHT
+
+  it('renders the current slide as a CarouselSlide', () => {
+    let slideProps;
+    slideProps = wrapper.find(CarouselSlide).props();
+    expect(slideProps).toEqual(slides[0]);
+    wrapper.setState({ slideIndex: 1 });
+    slideProps = wrapper.find(CarouselSlide).props();
+    expect(slideProps).toEqual(slides[1]);
   });
 });
